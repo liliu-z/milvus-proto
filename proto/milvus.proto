@@ -1053,7 +1053,10 @@ message SearchRequest {
   repeated string partition_names = 4; // must
   string dsl = 5; // must
   // serialized `PlaceholderGroup`
-  bytes placeholder_group = 6; // must
+  oneof search_input {
+    bytes placeholder_group = 6; // serialized `PlaceholderGroup` for vector search
+    schema.IDs ids = 21; // primary keys for search by IDs
+  }
   common.DslType dsl_type = 7; // must
   repeated string output_fields = 8;
   repeated common.KeyValuePair search_params = 9; // must
@@ -1063,10 +1066,10 @@ message SearchRequest {
   bool not_return_all_meta = 13;
   common.ConsistencyLevel consistency_level = 14;
   bool use_default_consistency = 15;
-  bool search_by_primary_keys = 16;
+  bool search_by_primary_keys = 16 [deprecated = true]; // use search_by_ids instead
   repeated SubSearchRequest sub_reqs = 17;
   map<string, schema.TemplateValue> expr_template_values = 18;
-  schema.FunctionScore function_score = 19;  
+  schema.FunctionScore function_score = 19;
   optional string namespace = 20;
 }
 
